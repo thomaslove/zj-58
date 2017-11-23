@@ -14,6 +14,8 @@
 
 #define DEBUGFILE "/tmp/debugraster.txt"
 
+typedef void (*__sighandler_t)();
+
 struct settings_
 {
 	int cashDrawer1;
@@ -101,16 +103,15 @@ inline void skiplines(int size)
 }
 
 // get an option
-inline int getOptionChoiceIndex(const char * choiceName, ppd_file_t * ppd)
-{
+inline int getOptionChoiceIndex(char * name, ppd_file_t * ppd){
 	ppd_choice_t * choice;
 	ppd_option_t * option;
 
-	choice = ppdFindMarkedChoice(ppd, choiceName);
+	choice = ppdFindMarkedChoice(ppd, name);
 
 	if (choice == NULL)
 	{
-		if ((option = ppdFindOption(ppd, choiceName))          == NULL) return -1;
+		if ((option = ppdFindOption(ppd, name)) == NULL) return -1;
 		if ((choice = ppdFindChoice(option,option->defchoice)) == NULL) return -1;
 	}
 
@@ -118,8 +119,9 @@ inline int getOptionChoiceIndex(const char * choiceName, ppd_file_t * ppd)
 }
 
 
-inline void initializeSettings(char * commandLineOptionSettings)
+void initializeSettings(char * commandLineOptionSettings)
 {
+	
 	ppd_file_t *    ppd         = NULL;
 	cups_option_t * options     = NULL;
 	int             numOptions  = 0;
@@ -257,7 +259,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "PAGE: %d %d\n", ++page, header.NumCopies);
 		pageSetup();
 
-		int foo = ( header.cupsWidth > 0x180 ) ? 0x180 : header.cupsWidth;
+		int foo = ( header.cupsWidth > 0x238 ) ? 0x238 : header.cupsWidth;
 		foo = (foo+7) & 0xFFFFFFF8;
 		int width_size = foo >> 3;
 

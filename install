@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Installs zj-58 driver
-# Tested as working under Ubuntu 14.04
+# Tested as working under MacOS 10.13.1
 
-/etc/init.d/cups stop
-cp rastertozj /usr/lib/cups/filter/
+sudo launchctl stop org.cups.cupsd
+cp rastertozj /usr/libexec/cups/filter/
 mkdir -p /usr/share/cups/model/zjiang
-cp ZJ-58.ppd /usr/share/cups/model/zjiang/
-cd /usr/lib/cups/filter
+cp zj-80.ppd /usr/share/cups/model/zjiang/
+cd /usr/libexec/cups/filter
 chmod 755 rastertozj
-chown root:root rastertozj
+chown root:wheel rastertozj
 cd -
-/etc/init.d/cups start
+sudo launchctl start org.cups.cupsd
